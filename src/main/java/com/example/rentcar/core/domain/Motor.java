@@ -1,6 +1,5 @@
 package com.example.rentcar.core.domain;
 
-import com.example.rentcar.core.enums.Type;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class Motor {
     private String id;
 
     @Indexed(unique = true)
-    private Type type;
+    private String type;
 
     @CreatedDate
     Instant createdAt;
