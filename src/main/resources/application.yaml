@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:password@34.143.207.175:27017/admin?readPreference=primary&directConnection=true&ssl=false
+
+logging:
+  level:
+    root: debug
+    org:
+      springframework:
+        web: debug
+      hibernate: info
+
