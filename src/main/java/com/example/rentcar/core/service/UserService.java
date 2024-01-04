@@ -19,7 +19,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public User save(LoginRequest req) {
-        Optional<User> optionalUser = userRepository.findByUsername(req.getUsername());
+        Optional<User> optionalUser = userRepository.findByUsernameAndRole(req.getUsername(), req.getRole());
         if (optionalUser.isPresent()) {
             throw BadRequestException.WithMessage("username already exist");
         }

@@ -2,6 +2,7 @@ package com.example.rentcar.present.request;
 
 import com.example.rentcar.core.enums.Role;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ public class LoginRequest {
     String username;
     @NotBlank
     String password;
-    @NotBlank
+    @NotNull
     Role role;
 }
 

@@ -24,7 +24,7 @@ public class AuthService {
     private final SecretKey secretKey;
 
     public Token login(LoginRequest req) {
-        User user = userRepository.findByUsername(req.getUsername()).
+        User user = userRepository.findByUsernameAndRole(req.getUsername(), req.getRole()).
                 orElseThrow(() -> UnauthorizedException.WithMessage("username incorrect"));
 
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {

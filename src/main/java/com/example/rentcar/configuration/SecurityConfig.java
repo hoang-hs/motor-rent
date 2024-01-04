@@ -45,9 +45,9 @@ public class SecurityConfig {
 //        return (web) -> web.ignoring().requestMatchers("/auth/**");
 //    }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.cors().and().csrf().disable();
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
+        return http.build();
+    }
 }

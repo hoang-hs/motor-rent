@@ -5,6 +5,7 @@ import com.example.rentcar.core.dto.Token;
 import com.example.rentcar.core.service.AuthService;
 import com.example.rentcar.core.service.UserService;
 import com.example.rentcar.present.request.LoginRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,12 +21,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    User save(@RequestBody LoginRequest req) {
+    User save(@RequestBody @Valid LoginRequest req) {
         return userService.save(req);
     }
 
     @PostMapping("/login")
-    Token login(@RequestBody LoginRequest req) {
+    Token login(@RequestBody @Valid LoginRequest req) {
         return authService.login(req);
     }
 
