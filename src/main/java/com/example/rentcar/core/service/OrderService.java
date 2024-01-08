@@ -11,10 +11,12 @@ import com.example.rentcar.exception.BadRequestException;
 import com.example.rentcar.exception.ResourceNotFoundException;
 import com.example.rentcar.exception.SystemErrorException;
 import com.example.rentcar.present.request.CreateOrderRequest;
+import com.example.rentcar.present.request.UpdateOrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
@@ -51,6 +53,14 @@ public class OrderService {
         User user = userRepository.findById(userId).
                 orElseThrow(SystemErrorException::Default);
         Order order = new Order(user, motor, req.getNumber());
+        return orderRepository.save(order);
+    }
+
+    public Order updateOrder(String id, UpdateOrderRequest req) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::Default);
+        order.setStatus(req.getStatus());
+        order.setUpdatedAt(Date.from(Instant.now()));
         return orderRepository.save(order);
     }
 
