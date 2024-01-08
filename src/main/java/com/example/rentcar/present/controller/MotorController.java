@@ -1,6 +1,6 @@
 package com.example.rentcar.present.controller;
 
-import com.example.rentcar.core.domain.Inventory;
+import com.example.rentcar.core.domain.Motor;
 import com.example.rentcar.core.service.MotorService;
 import com.example.rentcar.present.request.AddMotorRequest;
 import jakarta.validation.Valid;
@@ -17,7 +17,7 @@ public class MotorController {
     private final MotorService motorService;
 
     @PostMapping("")
-    Inventory addMotor(@RequestBody @Valid AddMotorRequest req) {
+    Motor addMotor(@RequestBody @Valid AddMotorRequest req) {
         return motorService.addMotor(req);
     }
 

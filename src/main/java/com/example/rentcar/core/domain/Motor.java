@@ -21,6 +21,8 @@ public class Motor {
     @Indexed(unique = true)
     private String type;
 
+    private Integer total;
+
     @CreatedDate
     Instant createdAt;
     @LastModifiedDate

@@ -1,10 +1,7 @@
 package com.example.rentcar.core.service;
 
-import com.example.rentcar.core.domain.Inventory;
 import com.example.rentcar.core.domain.Motor;
-import com.example.rentcar.core.domain.repository.InventoryRepository;
 import com.example.rentcar.core.domain.repository.MotorRepository;
-import com.example.rentcar.exception.SystemErrorException;
 import com.example.rentcar.present.request.AddMotorRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,27 +13,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MotorService {
     private final MotorRepository motorRepository;
-    private final InventoryRepository inventoryRepository;
 
-    public Inventory addMotor(AddMotorRequest req) {
+    public Motor addMotor(AddMotorRequest req) {
         Optional<Motor> optionalMotor = motorRepository.findByType(req.getType());
         if (optionalMotor.isPresent()) {
-            Inventory inventory = inventoryRepository.findByMotor(optionalMotor.get()).
-                    orElseThrow(SystemErrorException::Default);
-            inventory.setTotal(inventory.getTotal() + req.getNumber());
-            inventory.setUpdatedAt(Instant.now());
-            inventoryRepository.save(inventory);
-            return inventory;
+            Motor motor = optionalMotor.get();
+            motor.setTotal(motor.getTotal() + req.getNumber());
+            motor.setUpdatedAt(Instant.now());
+            motorRepository.save(motor);
+            return motor;
         }
         Motor motor = new Motor();
         motor.setType(req.getType());
+        motor.setTotal(req.getNumber());
         motorRepository.save(motor);
-        Inventory inventory = new Inventory();
-        inventory.setMotor(motor);
-        inventory.setReserved(0);
-        inventory.setTotal(req.getNumber());
-        inventoryRepository.save(inventory);
-        return inventory;
+        return motor;
     }
 
 }
