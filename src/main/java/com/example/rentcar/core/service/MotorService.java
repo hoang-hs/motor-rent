@@ -1,25 +1,36 @@
 package com.example.rentcar.core.service;
 
 import com.example.rentcar.core.domain.Motor;
+import com.example.rentcar.core.domain.Order;
 import com.example.rentcar.core.domain.repository.MotorRepository;
+import com.example.rentcar.core.domain.repository.OrderRepository;
+import com.example.rentcar.core.dto.MotorAvailable;
+import com.example.rentcar.core.enums.Status;
 import com.example.rentcar.present.request.AddMotorRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MotorService {
     private final MotorRepository motorRepository;
+    private final OrderRepository orderRepository;
 
     public Motor addMotor(AddMotorRequest req) {
         Optional<Motor> optionalMotor = motorRepository.findByType(req.getType());
         if (optionalMotor.isPresent()) {
             Motor motor = optionalMotor.get();
             motor.setTotal(motor.getTotal() + req.getNumber());
-            motor.setUpdatedAt(Instant.now());
+            motor.setUpdatedAt(Date.from(Instant.now()));
             motorRepository.save(motor);
             return motor;
         }
@@ -28,6 +39,39 @@ public class MotorService {
         motor.setTotal(req.getNumber());
         motorRepository.save(motor);
         return motor;
+    }
+
+    public List<MotorAvailable> getMotorAvailable(Date date) {
+        List<Motor> motors = motorRepository.findAll();
+        List<MotorAvailable> motorAvailables = new ArrayList<>();
+        for (Motor motor : motors) {
+            LocalDateTime localDateTime = dateToLocalDateTime(date);
+            LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+            Date fromDate = localDateTimeToDate(startOfDay);
+
+            LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+            Date todate = localDateTimeToDate(endOfDay);
+
+            List<Order> orders = orderRepository.findAllByStatusAndMotorAndUpdatedAtBetween(Status.SUCCESS, motor, todate, fromDate);
+
+            int count = orders.stream().mapToInt(Order::getNumber).sum();
+            if (count >= motor.getTotal()) {
+                break;
+            }
+            MotorAvailable motorAvailable = new MotorAvailable();
+            motorAvailable.setMotor(motor);
+            motorAvailable.setAvailable(motor.getTotal() - count);
+            motorAvailables.add(motorAvailable);
+        }
+        return motorAvailables;
+    }
+
+    private static LocalDateTime dateToLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    private static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }

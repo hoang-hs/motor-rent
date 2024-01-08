@@ -1,5 +1,6 @@
 package com.example.rentcar.core.domain;
 
+import com.example.rentcar.core.enums.Status;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -23,14 +25,16 @@ public class Order {
 
     private Integer number;
 
+    private Status status;
+
     @CreatedDate
-    Instant createdAt;
+    Date createdAt;
 
     @LastModifiedDate
-    Instant updatedAt;
+    Date updatedAt;
 
     public Order() {
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+        this.createdAt = Date.from(Instant.now());
+        this.updatedAt = Date.from(Instant.now());
     }
 }

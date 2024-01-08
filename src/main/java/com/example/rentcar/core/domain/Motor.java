@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -24,12 +25,13 @@ public class Motor {
     private Integer total;
 
     @CreatedDate
-    Instant createdAt;
+    Date createdAt;
+
     @LastModifiedDate
-    Instant updatedAt;
+    Date updatedAt;
 
     public Motor() {
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+        this.createdAt = Date.from(Instant.now());
+        this.updatedAt = Date.from(Instant.now());
     }
 }
