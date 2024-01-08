@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.rentcar.core.service.DateService.dateToLocalDateTime;
+import static com.example.rentcar.core.service.DateService.localDateTimeToDate;
 
 @Service
 @RequiredArgsConstructor
@@ -44,14 +46,14 @@ public class MotorService {
     public List<MotorAvailable> getMotorAvailable(Date date) {
         List<Motor> motors = motorRepository.findAll();
         List<MotorAvailable> motorAvailables = new ArrayList<>();
+
+        LocalDateTime localDateTime = dateToLocalDateTime(date);
+        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+        Date fromDate = localDateTimeToDate(startOfDay);
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        Date todate = localDateTimeToDate(endOfDay);
+
         for (Motor motor : motors) {
-            LocalDateTime localDateTime = dateToLocalDateTime(date);
-            LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
-            Date fromDate = localDateTimeToDate(startOfDay);
-
-            LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
-            Date todate = localDateTimeToDate(endOfDay);
-
             List<Order> orders = orderRepository.findAllByStatusAndMotorAndUpdatedAtBetween(Status.SUCCESS, motor, todate, fromDate);
 
             int count = orders.stream().mapToInt(Order::getNumber).sum();
@@ -66,12 +68,5 @@ public class MotorService {
         return motorAvailables;
     }
 
-    private static LocalDateTime dateToLocalDateTime(Date date) {
-        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-    }
-
-    private static Date localDateTimeToDate(LocalDateTime localDateTime) {
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-    }
 
 }

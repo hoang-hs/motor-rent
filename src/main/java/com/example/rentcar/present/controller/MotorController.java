@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/motor")
+@RequestMapping("/motors")
 @RequiredArgsConstructor
 public class MotorController {
     private final MotorService motorService;

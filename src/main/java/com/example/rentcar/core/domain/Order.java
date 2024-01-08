@@ -33,7 +33,11 @@ public class Order {
     @LastModifiedDate
     Date updatedAt;
 
-    public Order() {
+    public Order(User user, Motor motor, Integer number) {
+        this.user = user;
+        this.motor = motor;
+        this.number = number;
+        this.status = Status.NEW;
         this.createdAt = Date.from(Instant.now());
         this.updatedAt = Date.from(Instant.now());
     }
