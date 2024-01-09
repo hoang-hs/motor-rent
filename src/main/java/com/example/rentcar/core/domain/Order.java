@@ -27,16 +27,19 @@ public class Order {
 
     private Status status;
 
+    private Date dateOrder;
+
     @CreatedDate
     Date createdAt;
 
     @LastModifiedDate
     Date updatedAt;
 
-    public Order(User user, Motor motor, Integer number) {
+    public Order(User user, Motor motor, Integer number, Date dateOrder) {
         this.user = user;
         this.motor = motor;
         this.number = number;
+        this.dateOrder = dateOrder;
         this.status = Status.NEW;
         this.createdAt = Date.from(Instant.now());
         this.updatedAt = Date.from(Instant.now());

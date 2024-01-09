@@ -11,5 +11,6 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
-    List<Order> findAllByStatusAndMotorAndUpdatedAtBetween(Status status, Motor motor, Date fromDate, Date toDate);
+    List<Order> findAllByStatusAndMotorAndDateOrder(Status status, Motor motor, Date dateOrder);
+
 }

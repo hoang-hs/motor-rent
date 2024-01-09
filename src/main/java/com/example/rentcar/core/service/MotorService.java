@@ -11,15 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.rentcar.core.service.DateService.dateToLocalDateTime;
-import static com.example.rentcar.core.service.DateService.localDateTimeToDate;
+import static com.example.rentcar.core.service.DateService.dateLocalToUTC;
 
 @Service
 @RequiredArgsConstructor
@@ -46,15 +43,8 @@ public class MotorService {
     public List<MotorAvailable> getMotorAvailable(Date date) {
         List<Motor> motors = motorRepository.findAll();
         List<MotorAvailable> motorAvailables = new ArrayList<>();
-
-        LocalDateTime localDateTime = dateToLocalDateTime(date);
-        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
-        Date fromDate = localDateTimeToDate(startOfDay);
-        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
-        Date todate = localDateTimeToDate(endOfDay);
-
         for (Motor motor : motors) {
-            List<Order> orders = orderRepository.findAllByStatusAndMotorAndUpdatedAtBetween(Status.SUCCESS, motor, todate, fromDate);
+            List<Order> orders = orderRepository.findAllByStatusAndMotorAndDateOrder(Status.SUCCESS, motor, dateLocalToUTC(date));
 
             int count = orders.stream().mapToInt(Order::getNumber).sum();
             if (count >= motor.getTotal()) {

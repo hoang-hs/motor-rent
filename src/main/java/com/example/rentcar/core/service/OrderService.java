@@ -17,13 +17,10 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.rentcar.core.service.DateService.dateToLocalDateTime;
-import static com.example.rentcar.core.service.DateService.localDateTimeToDate;
+import static com.example.rentcar.core.service.DateService.dateLocalToUTC;
 
 
 @Service
@@ -34,16 +31,9 @@ public class OrderService {
     private final UserRepository userRepository;
 
     public Order CreateOrder(CreateOrderRequest req) {
-        LocalDateTime localDateTime = dateToLocalDateTime(req.getDate());
-        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
-        Date fromDate = localDateTimeToDate(startOfDay);
-        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
-        Date todate = localDateTimeToDate(endOfDay);
-
         Motor motor = motorRepository.findByType(req.getType()).
                 orElseThrow(ResourceNotFoundException::Default);
-
-        List<Order> orders = orderRepository.findAllByStatusAndMotorAndUpdatedAtBetween(Status.SUCCESS, motor, todate, fromDate);
+        List<Order> orders = orderRepository.findAllByStatusAndMotorAndDateOrder(Status.SUCCESS, motor, dateLocalToUTC(req.getDate()));
 
         int count = orders.stream().mapToInt(Order::getNumber).sum();
         if ((count + req.getNumber()) >= motor.getTotal()) {
@@ -52,7 +42,7 @@ public class OrderService {
         String userId = MDC.get("user_id");
         User user = userRepository.findById(userId).
                 orElseThrow(SystemErrorException::Default);
-        Order order = new Order(user, motor, req.getNumber());
+        Order order = new Order(user, motor, req.getNumber(), req.getDate());
         return orderRepository.save(order);
     }
 
