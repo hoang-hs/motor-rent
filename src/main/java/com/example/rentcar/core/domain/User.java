@@ -4,6 +4,7 @@ import com.example.rentcar.core.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Document(value = "user")
+@Builder
 public class User {
     @Id
     private String id;
@@ -28,13 +30,10 @@ public class User {
     private Role role;
 
     @CreatedDate
-    Date createdAt;
+    @Builder.Default
+    Date createdAt = Date.from(Instant.now());
 
     @LastModifiedDate
-    Date updatedAt;
-
-    public User() {
-        this.createdAt = Date.from(Instant.now());
-        this.updatedAt = Date.from(Instant.now());
-    }
+    @Builder.Default
+    Date updatedAt = Date.from(Instant.now());
 }

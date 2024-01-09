@@ -23,11 +23,12 @@ public class UserService {
         if (optionalUser.isPresent()) {
             throw BadRequestException.WithMessage("username already exist");
         }
-        User user = new User();
         String password = passwordEncoder.encode(req.getPassword());
-        user.setPassword(password);
-        user.setUsername(req.getUsername());
-        user.setRole(req.getRole());
+
+        User user = User.builder()
+                .password(password)
+                .username(req.getUsername())
+                .role(req.getRole()).build();
         return userRepository.save(user);
     }
 
