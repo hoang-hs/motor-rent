@@ -33,9 +33,9 @@ public class MotorService {
             motorRepository.save(motor);
             return motor;
         }
-        Motor motor = new Motor();
-        motor.setType(req.getType());
-        motor.setTotal(req.getNumber());
+        Motor motor = Motor.builder()
+                .type(req.getType())
+                .total(req.getNumber()).build();
         motorRepository.save(motor);
         return motor;
     }
@@ -50,9 +50,9 @@ public class MotorService {
             if (count >= motor.getTotal()) {
                 break;
             }
-            MotorAvailable motorAvailable = new MotorAvailable();
-            motorAvailable.setMotor(motor);
-            motorAvailable.setAvailable(motor.getTotal() - count);
+            MotorAvailable motorAvailable = MotorAvailable.builder()
+                    .motor(motor)
+                    .available(motor.getTotal() - count).build();
             motorAvailables.add(motorAvailable);
         }
         return motorAvailables;
