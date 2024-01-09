@@ -3,6 +3,7 @@ package com.example.rentcar.core.domain;
 import com.example.rentcar.core.enums.Status;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Document(value = "order")
+@Builder
 public class Order {
     @Id
     private String id;
@@ -30,18 +32,10 @@ public class Order {
     private Date dateOrder;
 
     @CreatedDate
-    Date createdAt;
+    @Builder.Default
+    Date createdAt = Date.from(Instant.now());
 
     @LastModifiedDate
     Date updatedAt;
 
-    public Order(User user, Motor motor, Integer number, Date dateOrder) {
-        this.user = user;
-        this.motor = motor;
-        this.number = number;
-        this.dateOrder = dateOrder;
-        this.status = Status.NEW;
-        this.createdAt = Date.from(Instant.now());
-        this.updatedAt = Date.from(Instant.now());
-    }
 }

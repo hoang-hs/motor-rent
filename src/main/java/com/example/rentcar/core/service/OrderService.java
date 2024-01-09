@@ -42,7 +42,12 @@ public class OrderService {
         String userId = MDC.get("user_id");
         User user = userRepository.findById(userId).
                 orElseThrow(SystemErrorException::Default);
-        Order order = new Order(user, motor, req.getNumber(), req.getDate());
+        Order order = Order.builder()
+                .user(user)
+                .motor(motor)
+                .number(req.getNumber())
+                .dateOrder(req.getDate())
+                .status(Status.NEW).build();
         return orderRepository.save(order);
     }
 
