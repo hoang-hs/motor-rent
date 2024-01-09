@@ -36,6 +36,6 @@ public class Order {
     Date createdAt = Date.from(Instant.now());
 
     @LastModifiedDate
-    Date updatedAt;
-
+    @Builder.Default
+    Date updatedAt = Date.from(Instant.now());
 }
