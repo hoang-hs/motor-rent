@@ -10,6 +10,8 @@ import org.slf4j.MDC;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,7 @@ public class UserService {
                 .password(password)
                 .username(req.getUsername())
                 .role(req.getRole())
+                .name(req.getName())
                 .email(req.getEmail())
                 .number(req.getNumber()).build();
         return userRepository.save(user);
@@ -43,6 +46,17 @@ public class UserService {
         String userId = MDC.get("user_id");
         return userRepository.findById(userId)
                 .orElseThrow(ResourceNotFoundException::Default);
+    }
+
+    public User update(String id, LoginRequest req) {
+        User user = userRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::Default);
+        user.setName(req.getName());
+        user.setEmail(req.getEmail());
+        user.setNumber(req.getNumber());
+        user.setUpdatedAt(Date.from(Instant.now()));
+        return userRepository.save(user);
+
     }
 
 }
