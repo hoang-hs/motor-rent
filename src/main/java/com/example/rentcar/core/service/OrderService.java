@@ -6,6 +6,7 @@ import com.example.rentcar.core.domain.User;
 import com.example.rentcar.core.domain.repository.MotorRepository;
 import com.example.rentcar.core.domain.repository.OrderRepository;
 import com.example.rentcar.core.domain.repository.UserRepository;
+import com.example.rentcar.core.enums.Role;
 import com.example.rentcar.core.enums.Status;
 import com.example.rentcar.exception.BadRequestException;
 import com.example.rentcar.exception.ResourceNotFoundException;
@@ -59,4 +60,10 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+
+    public List<Order> getOrder(String username, Status status) {
+        User user = userRepository.findByUsernameAndRole(username, Role.USER)
+                .orElseThrow(ResourceNotFoundException::Default);
+        return orderRepository.findAllByUserAndStatus(user, status);
+    }
 }
