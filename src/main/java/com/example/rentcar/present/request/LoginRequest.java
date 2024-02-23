@@ -15,5 +15,8 @@ public class LoginRequest {
     String password;
     @NotNull
     Role role;
+
+    String email;
+    String number;
 }
 

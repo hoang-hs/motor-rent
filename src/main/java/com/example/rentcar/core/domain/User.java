@@ -29,6 +29,9 @@ public class User {
     private String password;
     private Role role;
 
+    private String email;
+    private String number;
+
     @CreatedDate
     @Builder.Default
     Date createdAt = Date.from(Instant.now());

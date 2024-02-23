@@ -28,7 +28,9 @@ public class UserService {
         User user = User.builder()
                 .password(password)
                 .username(req.getUsername())
-                .role(req.getRole()).build();
+                .role(req.getRole())
+                .email(req.getEmail())
+                .number(req.getNumber()).build();
         return userRepository.save(user);
     }
 
