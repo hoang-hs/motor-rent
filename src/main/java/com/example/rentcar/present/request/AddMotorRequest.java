@@ -12,4 +12,6 @@ public class AddMotorRequest {
     String type;
     @Min(1)
     Integer number;
+    @Min(1)
+    Long price;
 }

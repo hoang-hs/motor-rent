@@ -28,12 +28,14 @@ public class MotorService {
         Optional<Motor> optionalMotor = motorRepository.findByType(req.getType());
         if (optionalMotor.isPresent()) {
             Motor motor = optionalMotor.get();
+            motor.setPrice(req.getPrice());
             motor.setTotal(motor.getTotal() + req.getNumber());
             motor.setUpdatedAt(Date.from(Instant.now()));
             motorRepository.save(motor);
             return motor;
         }
         Motor motor = Motor.builder()
+                .price(req.getPrice())
                 .type(req.getType())
                 .total(req.getNumber()).build();
         motorRepository.save(motor);

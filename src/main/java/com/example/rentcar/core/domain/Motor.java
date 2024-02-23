@@ -24,6 +24,8 @@ public class Motor {
     @Indexed(unique = true)
     private String type;
 
+    private Long price;
+
     private Integer total;
 
     @CreatedDate
